@@ -74,4 +74,3 @@ async def deliver_guide(message: Message, bot: Bot):
 
 
 
-
