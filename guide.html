@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Похудение без тренировок и жёстких диет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEAE1;
+    --paper-soft:#F5F2EA;
+    --ink:#262A22;
+    --ink-soft:#5B5E52;
+    --sage:#4F6D5A;
+    --sage-deep:#37493C;
+    --clay:#B97455;
+    --line:#D8D2C3;
+    --card:#FBFAF6;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:720px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    color:var(--sage-deep);
+    margin:0;
+  }
+  p{ max-width:64ch; }
+
+  /* ---- HERO ---- */
+  .hero{
+    padding:96px 0 64px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero .kicker{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:18px;
+    color:var(--clay);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:44px;
+    line-height:1.15;
+    margin-bottom:26px;
+  }
+  .hero p.lead{
+    font-size:18px;
+    color:var(--ink-soft);
+    max-width:52ch;
+  }
+
+  /* ---- SECTIONS ---- */
+  section{ padding:56px 0; }
+  section + section{ border-top:1px solid var(--line); }
+  h2{ font-size:28px; margin-bottom:20px; }
+  h2 .num{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    color:var(--sage);
+    background:rgba(79,109,90,0.1);
+    border-radius:20px;
+    padding:4px 12px;
+    margin-bottom:14px;
+  }
+
+  .principle{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:20px;
+    padding:22px 0;
+  }
+  .principle + .principle{ border-top:1px solid var(--line); }
+  .principle .leaf{
+    width:34px; height:34px;
+    flex-shrink:0;
+  }
+  .principle h3{ font-size:19px; margin-bottom:8px; }
+  .principle p{ color:var(--ink-soft); font-size:15.5px; margin:0; }
+
+  blockquote{
+    font-family:'Fraunces',serif;
+    font-size:23px;
+    line-height:1.5;
+    color:var(--sage-deep);
+    border-left:2px solid var(--clay);
+    padding-left:24px;
+    margin:36px 0;
+    font-style:italic;
+  }
+
+  .week{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .day{
+    display:grid;
+    grid-template-columns:64px 1fr;
+    align-items:baseline;
+    gap:18px;
+    padding:16px 0;
+  }
+  .day + .day{ border-top:1px dashed var(--line); }
+  .day .d{
+    font-family:'Fraunces',serif;
+    font-size:15px;
+    color:var(--clay);
+  }
+  .day .task strong{ display:block; font-size:16px; margin-bottom:3px; }
+  .day .task span{ color:var(--ink-soft); font-size:14.5px; }
+
+  .callout{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:26px 28px;
+    margin-top:28px;
+  }
+  .callout p{ margin:0; font-size:15px; color:var(--ink-soft); }
+
+  /* ---- CLOSING / OFFER ---- */
+  .offer{
+    background:var(--sage-deep);
+    color:var(--paper-soft);
+    padding:72px 0 80px;
+  }
+  .offer .wrap{ }
+  .offer h2{ color:var(--paper-soft); font-size:30px; margin-bottom:18px; }
+  .offer p{ color:#CBD3C6; font-size:16px; max-width:56ch; }
+  .offer .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin:34px 0 8px;
+  }
+  .offer .old{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    color:#8A9A85;
+    text-decoration:line-through;
+    text-decoration-color:var(--clay);
+  }
+  .offer .new{
+    font-family:'Fraunces',serif;
+    font-size:40px;
+    color:#fff;
+  }
+  .offer .per{
+    font-size:14px;
+    color:#9FAE99;
+  }
+  .offer ul{
+    list-style:none;
+    padding:0;
+    margin:28px 0 36px;
+  }
+  .offer li{
+    padding:10px 0 10px 30px;
+    position:relative;
+    font-size:15px;
+    color:#DCE3D7;
+    border-top:1px solid rgba(255,255,255,0.1);
+  }
+  .offer li:before{
+    content:"";
+    position:absolute;
+    left:0; top:16px;
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--clay);
+  }
+  .cta{
+    display:inline-block;
+    background:var(--clay);
+    color:#fff;
+    text-decoration:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    padding:16px 34px;
+    border-radius:4px;
+  }
+  .fine{
+    margin-top:18px;
+    font-size:12.5px;
+    color:#8A9A85;
+  }
+
+  footer{
+    padding:40px 0 60px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+
+  @media (max-width:560px){
+    .hero{ padding:64px 0 44px; }
+    .hero h1{ font-size:32px; }
+    section{ padding:40px 0; }
+    .principle{ grid-template-columns:1fr; }
+    .offer .new{ font-size:32px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="wrap">
+      <div class="kicker">Гайд · без тренировок, без жёстких диет</div>
+      <h1>Похудение, которое&nbsp;не&nbsp;построено на силе воли</h1>
+      <p class="lead">Шесть принципов и план на первую неделю для тех, кто устал от диет с понедельника и хочет изменений, которые действительно приживаются.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <span class="num">Прежде чем начать</span>
+      <h2>Почему жёсткие методы не работают долго</h2>
+      <p style="color:var(--ink-soft)">Строгие диеты и изнурительные тренировки дают быстрый результат — и почти всегда откат. Организм воспринимает резкое ограничение как стресс: замедляет обмен веществ, усиливает чувство голода и тягу к запрещённому. А удержать высокую дисциплину месяцами способны единицы — это не вопрос силы воли, а вопрос того, что метод изначально не рассчитан на долгую жизнь.</p>
+      <blockquote>Работает не то, что даёт быстрый результат. Работает то, что можно повторять, не замечая усилия.</blockquote>
+      <p style="color:var(--ink-soft)">Дальше — шесть принципов, на которых строится устойчивое снижение веса без диет и спортзала. Это не жёсткая программа, а набор привычек, которые постепенно меняют то, как вы едите и двигаетесь в течение дня.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="num">Принципы</span>
+      <h2>Шесть опор устойчивого похудения</h2>
+
+      <div class="principle">
+        <svg class="leaf" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#4F6D5A" stroke-width="1.4"/><path d="M11 17.5c1.5 3 4 4.5 6 4.5s4.5-1.5 6-4.5" stroke="#4F6D5A" stroke-width="1.4" stroke-linecap="round"/><circle cx="13" cy="14" r="1.2" fill="#4F6D5A"/><circle cx="21" cy="14" r="1.2" fill="#4F6D5A"/></svg>
+        <div>
+          <h3>Тарелка вместо весов и калькулятора</h3>
+          <p>Половина тарелки — овощи и зелень, четверть — белок (яйца, рыба, курица, творог, бобовые), четверть — медленные углеводы (крупы, цельнозерновой хлеб, картофель). Никаких подсчётов: просто ориентир, который со временем становится привычкой глаза.</p>
+        </div>
+      </div>
+
+      <div class="principle">
+        <svg class="leaf" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#4F6D5A" stroke-width="1.4"/><path d="M17 9v8l5 3" stroke="#4F6D5A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3>Ешьте медленнее, чем привыкли</h3>
+          <p>Сигнал сытости доходит до мозга примерно через 15–20 минут после начала еды. Отложите телефон, делайте паузы между кусками — этого часто достаточно, чтобы съедать меньше, не ограничивая себя специально.</p>
+        </div>
+      </div>
+
+      <div class="principle">
+        <svg class="leaf" viewBox="0 0 34 34" fill="none"><path d="M23 12a6 6 0 1 1-8.5 8.5" stroke="#4F6D5A" stroke-width="1.4" stroke-linecap="round"/><path d="M9 17h3M9 21h2M9 13h1" stroke="#4F6D5A" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <div>
+          <h3>Начните со сна и стресса, а не с еды</h3>
+          <p>Недосып и хронический стресс повышают уровень гормона голода и тягу к сладкому и жирному. Стабильный сон и простые способы разгрузки — прогулка, дыхание, тишина без экрана перед сном — часто меняют аппетит сильнее, чем любые ограничения в еде.</p>
+        </div>
+      </div>
+
+      <div class="principle">
+        <svg class="leaf" viewBox="0 0 34 34" fill="none"><path d="M9 24l6-9 4 5 6-9" stroke="#4F6D5A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3>Больше бытового движения — без спортзала</h3>
+          <p>Не тренировки, а фон дня: лестница вместо лифта, прогулка после ужина, разговор по телефону стоя, лишняя остановка пешком. Такая бытовая активность в сумме сжигает больше, чем принято думать, и не требует мотивации на «через силу».</p>
+        </div>
+      </div>
+
+      <div class="principle">
+        <svg class="leaf" viewBox="0 0 34 34" fill="none"><path d="M17 8c-4 5-6 8-6 11a6 6 0 0 0 12 0c0-3-2-6-6-11z" stroke="#4F6D5A" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <div>
+          <h3>Вода и клетчатка — вместо голодания</h3>
+          <p>Овощи, фрукты, цельные злаки и достаточное количество воды в течение дня дают объём и сытость без лишних калорий. Часто жажда маскируется под голод — стакан воды перед едой помогает почувствовать это яснее.</p>
+        </div>
+      </div>
+
+      <div class="principle">
+        <svg class="leaf" viewBox="0 0 34 34" fill="none"><rect x="9" y="9" width="16" height="16" rx="3" stroke="#4F6D5A" stroke-width="1.4"/><path d="M13 17h8M13 21h5" stroke="#4F6D5A" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <div>
+          <h3>Баланс вместо запретов</h3>
+          <p>Полный запрет любимой еды почти всегда заканчивается срывом. Разрешите себе то, что любите, в разумной порции и без чувства вины — так тяга к «запретному» ослабевает сама, и держаться курса становится легче.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="num">Первая неделя</span>
+      <h2>Семь дней — семь маленьких привычек</h2>
+      <p style="color:var(--ink-soft); margin-bottom:8px;">Не нужно внедрять всё сразу. Каждый день — одна привычка поверх предыдущей. К концу недели они уже складываются в систему.</p>
+      <div class="week">
+        <div class="day"><div class="d">День 1</div><div class="task"><strong>Соберите тарелку по принципу «половина-четверть-четверть»</strong><span>Один приём пищи в день — уже прогресс.</span></div></div>
+        <div class="day"><div class="d">День 2</div><div class="task"><strong>Стакан воды перед завтраком и обедом</strong><span>Простая привычка, которая часто снижает переедание.</span></div></div>
+        <div class="day"><div class="d">День 3</div><div class="task"><strong>10 минут прогулки после самого плотного приёма пищи</strong><span>Не тренировка — просто шаги в комфортном темпе.</span></div></div>
+        <div class="day"><div class="d">День 4</div><div class="task"><strong>Один приём пищи без телефона</strong><span>Замечайте вкус и момент, когда наелись.</span></div></div>
+        <div class="day"><div class="d">День 5</div><div class="task"><strong>Ложитесь на 30 минут раньше обычного</strong><span>Недосып завтра отзовётся тягой к сладкому.</span></div></div>
+        <div class="day"><div class="d">День 6</div><div class="task"><strong>Замените один перекус на фрукт или овощ</strong><span>Не убирайте старый перекус полностью — просто добавьте выбор.</span></div></div>
+        <div class="day"><div class="d">День 7</div><div class="task"><strong>Оглянитесь на неделю без оценок «хорошо/плохо»</strong><span>Отметьте, что получилось само собой, без усилия.</span></div></div>
+      </div>
+      <div class="callout">
+        <p>Если какой-то день сорвался — это нормально. Смысл не в идеальном выполнении, а в том, чтобы привычка возвращалась снова и снова, пока не станет автоматической.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="num">Если сорвались</span>
+      <h2>Один плохой день не отменяет систему</h2>
+      <p style="color:var(--ink-soft)">Съели больше, чем планировали, пропустили прогулку, легли поздно — это не откат к нулю. Единственная ошибка, которая действительно вредит, — решить, что раз день не идеальный, то можно бросить всё до понедельника. Просто вернитесь к следующему приёму пищи как ни в чём не бывало.</p>
+    </div>
+  </section>
+
+  <div class="offer">
+    <div class="wrap">
+      <span class="num" style="background:rgba(255,255,255,0.12); color:#DCE3D7;">Дальше</span>
+      <h2>Готовую систему легче держать вместе, чем в одиночку</h2>
+      <p>Этот гайд даёт принципы. Но собрать их в ежедневную программу, не свернуть через пару недель и не потерять мотивацию — самое сложное, когда делаешь это в одиночку. Именно на этом этапе большинство останавливается — не потому что не старались, а потому что удерживать процесс самостоятельно неделями по-настоящему тяжело.</p>
+      <p>В закрытом канале — готовые еженедельные комплексы привычек (не нужно придумывать самой), новая программа каждую неделю и чат, где девочки поддерживают друг друга и делятся результатами.</p>
+
+      <ul>
+        <li>Новая программа привычек каждую неделю — готовая, без раздумий «что делать сегодня»</li>
+        <li>Закрытый чат поддержки с другими участницами</li>
+        <li>Простые адекватные методы — без голодания и фанатизма</li>
+      </ul>
+
+      <div class="price-row">
+        <span class="old">1299₽</span>
+        <span class="new">699₽</span>
+        <span class="per">/ месяц</span>
+      </div>
+      <a href="https://t.me/+HdwKZ_AgxZ05MWFi" class="cta">Присоединиться к каналу</a>
+      <div class="fine">Оплата картой или Telegram Stars · отменить можно в любой момент</div>
+    </div>
+  </div>
+
+  <footer>
+    Этот гайд не заменяет консультацию врача или нутрициолога. При хронических заболеваниях, беременности или особых состояниях здоровья посоветуйтесь со специалистом.
+  </footer>
+
+</body>
+</html>
