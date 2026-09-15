@@ -29,13 +29,7 @@ async def buy_guide(callback: CallbackQuery, bot: Bot):
 
 @router.callback_query(F.data == "stars_help")
 async def stars_help(callback: CallbackQuery):
-    await callback.message.answer(
-        "Telegram Stars можно купить официально прямо в приложении Telegram:\n\n"
-        "Настройки → Telegram Stars → Купить звёзды "
-        "(оплата через Apple Pay / Google Pay / карту, в зависимости от устройства).\n\n"
-        "Также звёзды можно купить через официальный сервис fragment.com.\n\n"
-        "После этого просто вернись сюда и нажми «Купить гайд»."
-    )
+    await callback.message.answer(config.STARS_HELP_TEXT)
     await callback.answer()
 
 
@@ -77,6 +71,7 @@ async def deliver_guide(message: Message, bot: Bot):
         "делятся результатами.",
         reply_markup=kb.join_closed_channel_kb(),
     )
+
 
 
 
