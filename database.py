@@ -28,6 +28,17 @@ def init_db() -> None:
                 subscription_until TEXT
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS drafts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                post_date TEXT,
+                topic TEXT,
+                text TEXT,
+                image_path TEXT,
+                status TEXT DEFAULT 'pending',
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         conn.commit()
 
 
@@ -85,4 +96,50 @@ def get_user(user_id: int) -> sqlite3.Row | None:
     with _connect() as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+        return cur.fetchone()
+
+
+# ---------- Драфты ежедневных постов ----------
+
+def create_draft(post_date: str, topic: str, text: str, image_path: str | None) -> int:
+    with _connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO drafts (post_date, topic, text, image_path, status) "
+            "VALUES (?, ?, ?, ?, 'pending')",
+            (post_date, topic, text, image_path),
+        )
+        conn.commit()
+        return cur.lastrowid
+
+
+def update_draft(draft_id: int, text: str, image_path: str | None) -> None:
+    with _connect() as conn:
+        conn.execute(
+            "UPDATE drafts SET text = ?, image_path = ? WHERE id = ?",
+            (text, image_path, draft_id),
+        )
+        conn.commit()
+
+
+def set_draft_status(draft_id: int, status: str) -> None:
+    with _connect() as conn:
+        conn.execute("UPDATE drafts SET status = ? WHERE id = ?", (status, draft_id))
+        conn.commit()
+
+
+def get_draft(draft_id: int) -> sqlite3.Row | None:
+    with _connect() as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.execute("SELECT * FROM drafts WHERE id = ?", (draft_id,))
+        return cur.fetchone()
+
+
+def get_approved_draft_for_date(post_date: str) -> sqlite3.Row | None:
+    with _connect() as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.execute(
+            "SELECT * FROM drafts WHERE post_date = ? AND status = 'approved' "
+            "ORDER BY id DESC LIMIT 1",
+            (post_date,),
+        )
         return cur.fetchone()

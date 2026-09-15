@@ -30,8 +30,8 @@ FREE_CHANNEL_ID: int = _get_int("FREE_CHANNEL_ID", required=False)
 # Пример: "https://t.me/your_free_channel"
 FREE_CHANNEL_URL: str = os.getenv("FREE_CHANNEL_URL", "")
 
-# ID закрытого платного канала (нужен, только если захотите позже
-# автоматизировать проверку доступа — сейчас не используется)
+# ID закрытого платного канала — нужен, чтобы бот мог публиковать туда
+# посты через /post (бот должен быть админом канала)
 CLOSED_CHANNEL_ID: int = _get_int("CLOSED_CHANNEL_ID", required=False)
 
 # Прямая платная ссылка на закрытый канал (invite-ссылка Telegram,
@@ -59,3 +59,27 @@ STARS_HELP_TEXT: str = os.getenv("STARS_HELP_TEXT") or (
 
 # Путь к файлу гайда, который отправляется после оплаты
 GUIDE_FILE_PATH: str = os.getenv("GUIDE_FILE_PATH", "guide.html")
+
+
+# ---- Автопостинг контента (Gemini) ----
+
+GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+
+# Часовой пояс аудитории — используется для расписания публикаций
+TIMEZONE: str = os.getenv("TIMEZONE", "Asia/Dushanbe")
+
+# Во сколько бот готовит черновик и присылает вам на одобрение
+PREPARE_HOUR: int = _get_int("PREPARE_HOUR", required=False) or 8
+PREPARE_MINUTE: int = _get_int("PREPARE_MINUTE", required=False) or 0
+
+# Во сколько бот публикует одобренный черновик в бесплатный канал
+PUBLISH_HOUR: int = _get_int("PUBLISH_HOUR", required=False) or 10
+PUBLISH_MINUTE: int = _get_int("PUBLISH_MINUTE", required=False) or 0
+
+# Текст-приглашение в закрытый канал, который добавляется под каждым
+# ежедневным постом в бесплатном канале
+DAILY_CTA_TEXT: str = os.getenv(
+    "DAILY_CTA_TEXT",
+    "Такие советы — только часть картины. Готовая программа на каждую "
+    "неделю и чат поддержки — в закрытом канале 👇",
+)
