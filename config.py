@@ -47,5 +47,15 @@ ADMIN_ID: int = _get_int("ADMIN_ID", required=False)
 GUIDE_PRICE_STARS: int = _get_int("GUIDE_PRICE_STARS", required=False) or 250
 SUBSCRIPTION_PRICE_STARS: int = _get_int("SUBSCRIPTION_PRICE_STARS", required=False) or 499
 
+# Текст, который бот показывает по кнопке "Где взять Telegram Stars?".
+# Впишите сюда любую свою ссылку/инструкцию — этот текст бот отправляет как есть.
+STARS_HELP_TEXT: str = os.getenv("STARS_HELP_TEXT") or (
+    "Telegram Stars можно купить официально прямо в приложении Telegram:\n\n"
+    "Настройки → Telegram Stars → Купить звёзды "
+    "(оплата через Apple Pay / Google Pay / карту, в зависимости от устройства).\n\n"
+    "Также звёзды можно купить через официальный сервис fragment.com.\n\n"
+    "После этого просто вернись сюда и нажми «Купить гайд»."
+)
+
 # Путь к файлу гайда, который отправляется после оплаты
 GUIDE_FILE_PATH: str = os.getenv("GUIDE_FILE_PATH", "guide.html")
