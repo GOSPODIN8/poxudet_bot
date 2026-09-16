@@ -27,8 +27,7 @@ def _get_client() -> genai.Client:
 
 
 def generate_tip_text(topic_prompt: str) -> str:
-    """Генерирует текст короткого поста-совета по заданной теме."""
-    client = _get_client()
+    """Генерирует текст короткого поста-совета по заданной теме (для ежедневных постов)."""
     system_prompt = (
         "Ты ведёшь Telegram-канал про похудение без тренировок и жёстких диет. "
         "Тон — тёплый, поддерживающий, без осуждения и без давления. "
@@ -38,9 +37,15 @@ def generate_tip_text(topic_prompt: str) -> str:
         "без хэштегов и без markdown-разметки. "
         "Не добавляй в конце призыв подписаться на что-либо — это добавится отдельно."
     )
+    return generate_tip_text_raw(f"{system_prompt}\n\nТема сегодняшнего поста: {topic_prompt}")
+
+
+def generate_tip_text_raw(full_prompt: str) -> str:
+    """То же самое, но с полностью готовым промптом — для других сценариев (например, недельная программа)."""
+    client = _get_client()
     response = client.models.generate_content(
         model="gemini-3.6-flash",
-        contents=f"{system_prompt}\n\nТема сегодняшнего поста: {topic_prompt}",
+        contents=full_prompt,
     )
     return (response.text or "").strip()
 

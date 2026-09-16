@@ -83,3 +83,13 @@ DAILY_CTA_TEXT: str = os.getenv(
     "Такие советы — только часть картины. Готовая программа на каждую "
     "неделю и чат поддержки — в закрытом канале 👇",
 )
+
+# Когда готовить и публиковать программу недели в закрытом канале.
+# День недели: mon/tue/wed/thu/fri/sat/sun
+WEEKLY_PREPARE_DAY: str = os.getenv("WEEKLY_PREPARE_DAY", "sun")
+WEEKLY_PREPARE_HOUR: int = _get_int("WEEKLY_PREPARE_HOUR", required=False) or 18
+WEEKLY_PREPARE_MINUTE: int = _get_int("WEEKLY_PREPARE_MINUTE", required=False) or 0
+
+WEEKLY_PUBLISH_DAY: str = os.getenv("WEEKLY_PUBLISH_DAY", "mon")
+WEEKLY_PUBLISH_HOUR: int = _get_int("WEEKLY_PUBLISH_HOUR", required=False) or 9
+WEEKLY_PUBLISH_MINUTE: int = _get_int("WEEKLY_PUBLISH_MINUTE", required=False) or 0

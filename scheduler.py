@@ -9,12 +9,19 @@ from apscheduler.triggers.cron import CronTrigger
 import config
 import database as db
 import keyboards as kb
-from handlers.content_admin import generate_and_send_draft
+from handlers.content_admin import generate_and_send_draft, generate_and_send_weekly_draft
 
+
+def _monday_of_current_week() -> dt.date:
+    today = dt.date.today()
+    return today - dt.timedelta(days=today.weekday())
+
+
+# ---------- Ежедневный пост (бесплатный канал) ----------
 
 async def publish_daily_post(bot: Bot) -> None:
     today = dt.date.today().isoformat()
-    draft_row = db.get_approved_draft_for_date(today)
+    draft_row = db.get_approved_draft_for_date(today, kind="daily")
 
     if not draft_row:
         if config.ADMIN_ID:
@@ -55,6 +62,46 @@ async def publish_daily_post(bot: Bot) -> None:
             await bot.send_message(config.ADMIN_ID, f"⚠️ Не удалось опубликовать пост: {e}")
 
 
+# ---------- Программа недели (закрытый канал) ----------
+
+async def publish_weekly_post(bot: Bot) -> None:
+    monday = _monday_of_current_week().isoformat()
+    draft_row = db.get_approved_draft_for_date(monday, kind="weekly")
+
+    if not draft_row:
+        if config.ADMIN_ID:
+            await bot.send_message(
+                config.ADMIN_ID,
+                "⚠️ На эту неделю нет одобренной программы — публикация в закрытый "
+                "канал пропущена. Одобрите черновик заранее или запустите /post_week.",
+            )
+        return
+
+    if not config.CLOSED_CHANNEL_ID:
+        if config.ADMIN_ID:
+            await bot.send_message(config.ADMIN_ID, "⚠️ Не задан CLOSED_CHANNEL_ID, публикация невозможна.")
+        return
+
+    caption = draft_row["text"]
+    try:
+        if draft_row["image_path"] and os.path.exists(draft_row["image_path"]):
+            await bot.send_photo(
+                config.CLOSED_CHANNEL_ID,
+                FSInputFile(draft_row["image_path"]),
+                caption=caption[:1024],
+            )
+        else:
+            await bot.send_message(config.CLOSED_CHANNEL_ID, caption)
+
+        db.set_draft_status(draft_row["id"], "published")
+
+        if config.ADMIN_ID:
+            await bot.send_message(config.ADMIN_ID, "✅ Программа недели опубликована в закрытый канал.")
+    except Exception as e:
+        if config.ADMIN_ID:
+            await bot.send_message(config.ADMIN_ID, f"⚠️ Не удалось опубликовать программу недели: {e}")
+
+
 def setup_scheduler(bot: Bot) -> AsyncIOScheduler:
     scheduler = AsyncIOScheduler(timezone=config.TIMEZONE)
 
@@ -65,12 +112,34 @@ def setup_scheduler(bot: Bot) -> AsyncIOScheduler:
         id="prepare_daily_post",
         replace_existing=True,
     )
-
     scheduler.add_job(
         publish_daily_post,
         CronTrigger(hour=config.PUBLISH_HOUR, minute=config.PUBLISH_MINUTE),
         args=[bot],
         id="publish_daily_post",
+        replace_existing=True,
+    )
+
+    scheduler.add_job(
+        generate_and_send_weekly_draft,
+        CronTrigger(
+            day_of_week=config.WEEKLY_PREPARE_DAY,
+            hour=config.WEEKLY_PREPARE_HOUR,
+            minute=config.WEEKLY_PREPARE_MINUTE,
+        ),
+        args=[bot],
+        id="prepare_weekly_post",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        publish_weekly_post,
+        CronTrigger(
+            day_of_week=config.WEEKLY_PUBLISH_DAY,
+            hour=config.WEEKLY_PUBLISH_HOUR,
+            minute=config.WEEKLY_PUBLISH_MINUTE,
+        ),
+        args=[bot],
+        id="publish_weekly_post",
         replace_existing=True,
     )
 

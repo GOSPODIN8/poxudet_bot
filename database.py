@@ -36,9 +36,14 @@ def init_db() -> None:
                 text TEXT,
                 image_path TEXT,
                 status TEXT DEFAULT 'pending',
+                kind TEXT DEFAULT 'daily',
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        # На случай, если таблица уже существовала до добавления этой колонки
+        cols = [row[1] for row in conn.execute("PRAGMA table_info(drafts)")]
+        if "kind" not in cols:
+            conn.execute("ALTER TABLE drafts ADD COLUMN kind TEXT DEFAULT 'daily'")
         conn.commit()
 
 
@@ -99,14 +104,15 @@ def get_user(user_id: int) -> sqlite3.Row | None:
         return cur.fetchone()
 
 
-# ---------- Драфты ежедневных постов ----------
+# ---------- Драфты постов (ежедневных и еженедельной программы) ----------
 
-def create_draft(post_date: str, topic: str, text: str, image_path: str | None) -> int:
+def create_draft(post_date: str, topic: str, text: str, image_path: str | None,
+                  kind: str = "daily") -> int:
     with _connect() as conn:
         cur = conn.execute(
-            "INSERT INTO drafts (post_date, topic, text, image_path, status) "
-            "VALUES (?, ?, ?, ?, 'pending')",
-            (post_date, topic, text, image_path),
+            "INSERT INTO drafts (post_date, topic, text, image_path, status, kind) "
+            "VALUES (?, ?, ?, ?, 'pending', ?)",
+            (post_date, topic, text, image_path, kind),
         )
         conn.commit()
         return cur.lastrowid
@@ -134,12 +140,12 @@ def get_draft(draft_id: int) -> sqlite3.Row | None:
         return cur.fetchone()
 
 
-def get_approved_draft_for_date(post_date: str) -> sqlite3.Row | None:
+def get_approved_draft_for_date(post_date: str, kind: str = "daily") -> sqlite3.Row | None:
     with _connect() as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.execute(
-            "SELECT * FROM drafts WHERE post_date = ? AND status = 'approved' "
+            "SELECT * FROM drafts WHERE post_date = ? AND kind = ? AND status = 'approved' "
             "ORDER BY id DESC LIMIT 1",
-            (post_date,),
+            (post_date, kind),
         )
         return cur.fetchone()
