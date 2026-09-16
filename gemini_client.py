@@ -1,9 +1,15 @@
 """
 Обёртка над Gemini API: генерация текста поста и картинки к нему.
 
-Модель для текста — gemini-2.5-flash (быстро и дёшево).
-Модель для картинок — gemini-3.1-flash-image ("Nano Banana", актуальная модель
-Google для генерации изображений через generateContent на 2026 год).
+Модель для текста — gemini-3.6-flash (актуальная стабильная flash-модель
+Google на 2026 год; более ранняя gemini-2.5-flash уже снята с поддержки
+для новых проектов).
+Модель для картинок — gemini-3.1-flash-image ("Nano Banana").
+
+Google периодически меняет актуальные модели и отключает старые — если
+через несколько месяцев снова появится ошибка вида "model ... is no longer
+available", просто замените имя модели здесь на то, что укажет Google в
+тексте ошибки.
 """
 from google import genai
 from google.genai import types
@@ -33,7 +39,7 @@ def generate_tip_text(topic_prompt: str) -> str:
         "Не добавляй в конце призыв подписаться на что-либо — это добавится отдельно."
     )
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.6-flash",
         contents=f"{system_prompt}\n\nТема сегодняшнего поста: {topic_prompt}",
     )
     return (response.text or "").strip()

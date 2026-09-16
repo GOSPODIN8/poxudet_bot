@@ -38,7 +38,18 @@ async def generate_and_send_draft(bot: Bot) -> None:
     """Вызывается планировщиком утром — готовит пост дня и шлёт админу на одобрение."""
     if not config.ADMIN_ID:
         return
-    draft = content.build_daily_draft()
+
+    try:
+        draft = content.build_daily_draft()
+    except Exception as e:
+        await bot.send_message(
+            config.ADMIN_ID,
+            f"⚠️ Не получилось сгенерировать пост дня: {e}\n\n"
+            "Часто причина — Google обновил модель Gemini и старое имя модели "
+            "перестало работать. Напиши мне, если увидишь это сообщение — поправлю."
+        )
+        return
+
     image_path = None
     if draft["image_bytes"]:
         image_path = f"draft_{dt.date.today().isoformat()}.png"
@@ -89,7 +100,12 @@ async def regenerate_draft(callback: CallbackQuery, bot: Bot):
     await callback.answer("Генерирую заново...")
     await callback.message.answer("🔄 Секунду, генерирую новый вариант...")
 
-    draft = content.build_daily_draft()
+    try:
+        draft = content.build_daily_draft()
+    except Exception as e:
+        await callback.message.answer(f"⚠️ Не получилось сгенерировать: {e}")
+        return
+
     image_path = None
     if draft["image_bytes"]:
         image_path = f"draft_{draft_id}_{dt.datetime.now().timestamp():.0f}.png"

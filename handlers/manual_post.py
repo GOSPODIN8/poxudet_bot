@@ -59,14 +59,21 @@ async def manual_want_image(callback: CallbackQuery, state: FSMContext):
 @router.message(ManualPost.image_prompt)
 async def manual_image_prompt(message: Message, state: FSMContext):
     await message.answer("🎨 Генерирую картинку...")
-    image_bytes = gemini_client.generate_image(message.text.strip())
+    image_bytes = None
+    error_reported = False
+    try:
+        image_bytes = gemini_client.generate_image(message.text.strip())
+    except Exception as e:
+        await message.answer(f"⚠️ Не получилось сгенерировать картинку: {e}\nПродолжаем без неё.")
+        error_reported = True
+
     image_path = None
     if image_bytes:
         image_path = f"manual_post_{int(time.time())}.png"
         with open(image_path, "wb") as f:
             f.write(image_bytes)
         await message.answer_photo(FSInputFile(image_path), caption="Вот такая картинка получилась")
-    else:
+    elif not error_reported:
         await message.answer("Не получилось сгенерировать картинку, продолжаем без неё.")
 
     await state.update_data(image_path=image_path)
